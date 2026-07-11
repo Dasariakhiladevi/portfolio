@@ -165,16 +165,20 @@ app.get('*', (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, '0.0.0.0', () => {
-  const localIp = getLocalIpAddress();
-  console.log(`================================================================`);
-  console.log(` 💻 Server is running on your local network:`);
-  console.log(`   - Localhost:       http://localhost:${PORT}`);
-  if (localIp !== 'localhost') {
-    console.log(`   - Other Devices:   http://${localIp}:${PORT} (Mobiles, Laptops)`);
-  }
-  console.log(` `);
-  console.log(` 📱 Connect other devices (phones/tablets) to the same Wi-Fi network`);
-  console.log(`    and open the link above to view your portfolio!`);
-  console.log(`================================================================`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    const localIp = getLocalIpAddress();
+    console.log(`================================================================`);
+    console.log(` 💻 Server is running on your local network:`);
+    console.log(`   - Localhost:       http://localhost:${PORT}`);
+    if (localIp !== 'localhost') {
+      console.log(`   - Other Devices:   http://${localIp}:${PORT} (Mobiles, Laptops)`);
+    }
+    console.log(` `);
+    console.log(` 📱 Connect other devices (phones/tablets) to the same Wi-Fi network`);
+    console.log(`    and open the link above to view your portfolio!`);
+    console.log(`================================================================`);
+  });
+}
+
+module.exports = app;
