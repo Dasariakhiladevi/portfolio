@@ -101,7 +101,7 @@ app.post('/api/messages', (req, res) => {
     const isEmailConfigured = !!transporter;
 
     if (isEmailConfigured) {
-      const receiverEmail = process.env.RECEIVER_EMAIL || process.env.SMTP_USER;
+      const receiverEmail = process.env.RECEIVER_EMAIL || '4444akhiladevi.com@gmail.com';
       const mailOptions = {
         from: `"${name} (Portfolio)" <${process.env.SMTP_USER}>`,
         to: receiverEmail,
