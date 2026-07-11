@@ -3,10 +3,10 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const nodemailer = require('nodemailer');
+const { createTransporter } = require('./mail-config');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const DEFAULT_PORT = Number(process.env.PORT) || 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'messages.json');
 
 // Middleware
@@ -29,15 +29,7 @@ function getLocalIpAddress() {
 }
 
 // Setup Nodemailer SMTP Transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT || '465'),
-  secure: process.env.SMTP_SECURE !== 'false', // default to true (port 465)
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-});
+const transporter = createTransporter();
 
 let memoryMessages = [];
 
@@ -106,13 +98,10 @@ app.post('/api/messages', (req, res) => {
     // ----------------------------------------------------
     // Nodemailer Email Forwarding Integration
     // ----------------------------------------------------
-    const isEmailConfigured = 
-      process.env.SMTP_USER && 
-      process.env.SMTP_PASS && 
-      process.env.SMTP_PASS !== 'xxxx_xxxx_xxxx_xxxx';
+    const isEmailConfigured = !!transporter;
 
     if (isEmailConfigured) {
-      const receiverEmail = process.env.RECEIVER_EMAIL || '4444akhiladevi.com@gmail.com';
+      const receiverEmail = process.env.RECEIVER_EMAIL || process.env.SMTP_USER;
       const mailOptions = {
         from: `"${name} (Portfolio)" <${process.env.SMTP_USER}>`,
         to: receiverEmail,
@@ -145,7 +134,13 @@ app.post('/api/messages', (req, res) => {
       console.log('Nodemailer Info: Email forwarding skipped. Add SMTP credentials in .env to enable.');
     }
 
-    res.status(201).json({ success: true, message: 'Message saved successfully!', data: newMessage });
+    res.status(201).json({
+      success: true,
+      message: isEmailConfigured
+        ? 'Message saved successfully!'
+        : 'Message saved successfully, but email forwarding is disabled until SMTP credentials are configured.',
+      data: newMessage
+    });
   } else {
     res.status(500).json({ error: 'Failed to save message on the server.' });
   }
@@ -175,19 +170,33 @@ app.get('*', (req, res) => {
 
 // Start Server
 if (!process.env.VERCEL) {
-  app.listen(PORT, '0.0.0.0', () => {
-    const localIp = getLocalIpAddress();
-    console.log(`================================================================`);
-    console.log(` 💻 Server is running on your local network:`);
-    console.log(`   - Localhost:       http://localhost:${PORT}`);
-    if (localIp !== 'localhost') {
-      console.log(`   - Other Devices:   http://${localIp}:${PORT} (Mobiles, Laptops)`);
-    }
-    console.log(` `);
-    console.log(` 📱 Connect other devices (phones/tablets) to the same Wi-Fi network`);
-    console.log(`    and open the link above to view your portfolio!`);
-    console.log(`================================================================`);
-  });
+  const startServer = (port) => {
+    const server = app.listen(port, '0.0.0.0', () => {
+      const localIp = getLocalIpAddress();
+      console.log(`================================================================`);
+      console.log(` 💻 Server is running on your local network:`);
+      console.log(`   - Localhost:       http://localhost:${port}`);
+      if (localIp !== 'localhost') {
+        console.log(`   - Other Devices:   http://${localIp}:${port} (Mobiles, Laptops)`);
+      }
+      console.log(` `);
+      console.log(` 📱 Connect other devices (phones/tablets) to the same Wi-Fi network`);
+      console.log(`    and open the link above to view your portfolio!`);
+      console.log(`================================================================`);
+    });
+
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.warn(`Port ${port} is busy. Trying ${port + 1} instead...`);
+        startServer(port + 1);
+      } else {
+        console.error('Failed to start server:', error);
+        process.exit(1);
+      }
+    });
+  };
+
+  startServer(DEFAULT_PORT);
 }
 
 module.exports = app;
