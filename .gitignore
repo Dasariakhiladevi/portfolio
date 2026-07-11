@@ -1,0 +1,16 @@
+# Node dependencies
+node_modules/
+
+# Local environment variables (sensitive data)
+.env
+.env.local
+
+# Local database file
+data/messages.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.logs/
+*.log

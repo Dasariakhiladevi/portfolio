@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional Portfolio of Dasari Akhila Devi - Python Developer & Software Intern">
+  <title>Dasari Akhila Devi | Python Developer & Software Intern</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Grid Effect -->
+  <div class="bg-grid"></div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="#home" class="logo">
+        <span class="logo-tag">&lt;</span>Akhila Devi<span class="logo-tag"> /&gt;</span>
+      </a>
+      <nav class="nav-menu" id="navMenu">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#education" class="nav-link">Education</a>
+        <a href="#profiles" class="nav-link">Profiles</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button id="viewMessagesBtn" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-envelope-open-text"></i> Messages
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <div class="badge">Aspiring Python Developer</div>
+        <h1 class="hero-title">
+          Hi, I am <br>
+          <span class="highlight">Dasari Akhila Devi</span>
+        </h1>
+        <p class="hero-subtitle">
+          Python Developer &bull; Software Intern &bull; BCA Student
+        </p>
+        <p class="hero-desc">
+          Detail-oriented Computer Applications student with hands-on experience in Python programming, Object-Oriented concepts, Data Structures, and Cybersecurity fundamentals.
+        </p>
+        <div class="hero-buttons">
+          <a href="#contact" class="btn btn-primary">Get In Touch</a>
+          <a href="#experience" class="btn btn-outline">View Internships</a>
+        </div>
+        <div class="social-links">
+          <a href="https://linkedin.com/in/dasariakhiladevi" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="https://github.com/Dasariakhiladevi" target="_blank" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+          <a href="https://leetcode.com/u/akhila0214" target="_blank" aria-label="LeetCode"><i class="fa-solid fa-code"></i></a>
+        </div>
+      </div>
+      <div class="hero-image-wrapper">
+        <div class="image-border-glow">
+          <img src="assets/profile.png" alt="Dasari Akhila Devi" class="hero-image">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section about">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">About Me</h2>
+        <div class="section-underline"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-card">
+          <h3>Professional Summary</h3>
+          <p>
+            I am a dedicated Bachelor of Computer Applications (BCA) student based in Visakhapatnam, India. I specialize in Python development and have a strong interest in software engineering, data analysis, and cybersecurity. 
+          </p>
+          <p>
+            Having completed a structured Advanced Python internship at DataPro Computers, I have fortified my programming foundations. I consistently practice Data Structures and Algorithms (DSA) on LeetCode to improve my logical reasoning and problem-solving abilities.
+          </p>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="info-label">Location:</span>
+              <span class="info-value">Visakhapatnam, Andhra Pradesh, India</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Degree:</span>
+              <span class="info-value">BCA - Computer Science (2024 - 2027)</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Interests:</span>
+              <span class="info-value">Python, DSA, Cybersec, Data Analysis</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-stats">
+          <div class="stat-box">
+            <span class="stat-number">1+</span>
+            <span class="stat-text">Python Internships</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number">50+</span>
+            <span class="stat-text">DSA Problems Solved</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number">2027</span>
+            <span class="stat-text">BCA Graduation Year</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="section skills bg-darker">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Key Skills</h2>
+        <div class="section-underline"></div>
+      </div>
+      <div class="skills-grid">
+        <!-- Python Programming -->
+        <div class="skill-category">
+          <div class="category-icon"><i class="fa-brands fa-python"></i></div>
+          <h3>Python & OOP</h3>
+          <p class="category-desc">Core programming & backend foundations</p>
+          <ul class="skill-tags">
+            <li>Object-Oriented Programming (OOP)</li>
+            <li>Functions & Modules</li>
+            <li>File Handling</li>
+            <li>Exception Handling</li>
+            <li>Python Libraries</li>
+          </ul>
+        </div>
+        <!-- DSA & Problem Solving -->
+        <div class="skill-category">
+          <div class="category-icon"><i class="fa-solid fa-brain"></i></div>
+          <h3>DSA & Logical Reasoning</h3>
+          <p class="category-desc">Algorithmic concepts & computational thinking</p>
+          <ul class="skill-tags">
+            <li>Data Structures</li>
+            <li>Algorithms</li>
+            <li>Problem Solving</li>
+            <li>Logical Reasoning</li>
+            <li>Debugging & Diagnostics</li>
+          </ul>
+        </div>
+        <!-- Data Analysis & Security -->
+        <div class="skill-category">
+          <div class="category-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <h3>Data & Security</h3>
+          <p class="category-desc">Information processing and system protection</p>
+          <ul class="skill-tags">
+            <li>Data Analysis</li>
+            <li>Cybersecurity Fundamentals</li>
+            <li>Data Security Awareness</li>
+            <li>Data Visualization</li>
+          </ul>
+        </div>
+        <!-- Tools & Best Practices -->
+        <div class="skill-category">
+          <div class="category-icon"><i class="fa-solid fa-gears"></i></div>
+          <h3>Tools & Methodology</h3>
+          <p class="category-desc">Development workflows and lifecycle basics</p>
+          <ul class="skill-tags">
+            <li>Git / GitHub</li>
+            <li>Version Control</li>
+            <li>SDLC Basics</li>
+            <li>Coding Best Practices</li>
+            <li>Team Collaboration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience & Internship Section -->
+  <section id="experience" class="section experience">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Internships & Certifications</h2>
+        <div class="section-underline"></div>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">May 2026 - Jun 2026</div>
+          <div class="timeline-content">
+            <span class="timeline-badge">Internship</span>
+            <h3 class="timeline-title">Python Developer Intern</h3>
+            <h4 class="timeline-company">DataPro Computers Pvt. Ltd.</h4>
+            <p class="timeline-certificate">Certificate No: <strong>DIC0011197674</strong></p>
+            <p class="timeline-desc">
+              Completed a structured, short-term internship focusing on Advanced Python programming. Designed and applied scripts incorporating complex logic, error boundaries, and file structures.
+            </p>
+            <ul class="timeline-bullets">
+              <li>Strengthened core programming, modular script structure, and exception handling processes.</li>
+              <li>Applied object-oriented principles through intensive programming exercises.</li>
+              <li>Certification recognized under the Andhra Pradesh State Council of Higher Education (APSCHE).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education Section -->
+  <section id="education" class="section education bg-darker">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Education</h2>
+        <div class="section-underline"></div>
+      </div>
+      <div class="education-grid">
+        <div class="edu-card">
+          <div class="edu-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <span class="edu-duration">Aug 2024 – May 2027</span>
+          <h3>Bachelor of Computer Applications (BCA)</h3>
+          <p class="edu-field">Computer Science</p>
+          <p class="edu-institution">Chaitanya Degree & PG College for Women, Visakhapatnam</p>
+          <p class="edu-status">Currently Pursuing</p>
+        </div>
+        <div class="edu-card">
+          <div class="edu-icon"><i class="fa-solid fa-school"></i></div>
+          <span class="edu-duration">Jun 2022 – May 2024</span>
+          <h3>Intermediate Education (MPC)</h3>
+          <p class="edu-field">Mathematics, Physics, Chemistry</p>
+          <p class="edu-institution">Sri Chaitanya Junior College, Vydehi Bhavan</p>
+        </div>
+        <div class="edu-card">
+          <div class="edu-icon"><i class="fa-solid fa-school-flag"></i></div>
+          <span class="edu-duration">Completed</span>
+          <h3>Secondary School Education</h3>
+          <p class="edu-field">High School</p>
+          <p class="edu-institution">Sai Madhava Vidyalaya</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coding Profiles Section -->
+  <section id="profiles" class="section profiles">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Coding Profiles</h2>
+        <div class="section-underline"></div>
+      </div>
+      <div class="profiles-grid">
+        <!-- LeetCode Card -->
+        <a href="https://leetcode.com/u/akhila0214" target="_blank" class="profile-card leetcode">
+          <div class="profile-icon"><i class="fa-solid fa-code"></i></div>
+          <h3>LeetCode</h3>
+          <p class="profile-user">@akhila0214</p>
+          <p class="profile-detail">Practicing Data Structures & Algorithms (DSA) and Python problem-solving.</p>
+          <span class="profile-link-text">View Profile <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <!-- GitHub Card -->
+        <a href="https://github.com/Dasariakhiladevi" target="_blank" class="profile-card github">
+          <div class="profile-icon"><i class="fa-brands fa-github"></i></div>
+          <h3>GitHub</h3>
+          <p class="profile-user">@Dasariakhiladevi</p>
+          <p class="profile-detail">Maintains repositories for Python programming exercises and projects.</p>
+          <span class="profile-link-text">View Repositories <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <!-- LinkedIn Card -->
+        <a href="https://linkedin.com/in/dasariakhiladevi" target="_blank" class="profile-card linkedin">
+          <div class="profile-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+          <h3>LinkedIn</h3>
+          <p class="profile-user">@dasariakhiladevi</p>
+          <p class="profile-detail">Professional profile and career networking connection.</p>
+          <span class="profile-link-text">Connect Here <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section contact bg-darker">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="section-underline"></div>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Let's Connect</h3>
+          <p class="contact-desc">
+            I'm always looking for software developer internships and Python programming opportunities. Feel free to reach out!
+          </p>
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="icon-wrapper"><i class="fa-solid fa-envelope"></i></div>
+              <div>
+                <h4>Email</h4>
+                <a href="mailto:4444akhiladevi.com@gmail.com">4444akhiladevi.com@gmail.com</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="icon-wrapper"><i class="fa-solid fa-phone"></i></div>
+              <div>
+                <h4>Phone</h4>
+                <a href="tel:+919000818928">+91 9000818928</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="icon-wrapper"><i class="fa-solid fa-location-dot"></i></div>
+              <div>
+                <h4>Location</h4>
+                <span>Visakhapatnam, Andhra Pradesh, India</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form-wrapper">
+          <form id="contactForm" class="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" placeholder="Internship Opportunity">
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" placeholder="Your message here..." required></textarea>
+            </div>
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-block">
+              <span>Send Message</span>
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+            <div id="formFeedback" class="form-feedback"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>&copy; 2026 Dasari Akhila Devi. All rights reserved.</p>
+      <div class="footer-socials">
+        <a href="https://linkedin.com/in/dasariakhiladevi" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="https://github.com/Dasariakhiladevi" target="_blank"><i class="fa-brands fa-github"></i></a>
+        <a href="https://leetcode.com/u/akhila0214" target="_blank"><i class="fa-solid fa-code"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Admin Messages Dashboard Modal -->
+  <div class="modal-overlay" id="messagesModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-envelope-open-text"></i> Message Inbox (Node Backend)</h2>
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-intro">This dashboard directly queries <code>/api/messages</code> on your running Node.js server. Use this to verify the form submissions.</p>
+        <div id="messagesList" class="messages-list">
+          <div class="empty-state">
+            <i class="fa-solid fa-folder-open"></i>
+            <p>No messages received yet. Submit a message through the contact form to see it display here!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom JS -->
+  <script src="app.js"></script>
+</body>
+</html>
