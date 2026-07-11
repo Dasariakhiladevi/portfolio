@@ -39,8 +39,13 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Helper to read messages from JSON database
+let memoryMessages = [];
+
+// Helper to read messages from JSON database or memory fallback
 const readMessages = () => {
+  if (process.env.VERCEL) {
+    return memoryMessages;
+  }
   try {
     if (!fs.existsSync(DATA_FILE)) {
       fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
@@ -55,8 +60,12 @@ const readMessages = () => {
   }
 };
 
-// Helper to write messages to JSON database
+// Helper to write messages to JSON database or memory fallback
 const writeMessages = (messages) => {
+  if (process.env.VERCEL) {
+    memoryMessages = messages;
+    return true;
+  }
   try {
     fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
     fs.writeFileSync(DATA_FILE, JSON.stringify(messages, null, 2));
