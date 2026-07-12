@@ -3,11 +3,12 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { createTransporter } = require('./mail-config');
+const { Resend } = require('resend');
 
 const app = express();
 const DEFAULT_PORT = Number(process.env.PORT) || 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'messages.json');
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Middleware
 app.use(express.json());
@@ -27,9 +28,6 @@ function getLocalIpAddress() {
   }
   return 'localhost';
 }
-
-// Setup Nodemailer SMTP Transporter
-const transporter = createTransporter();
 
 let memoryMessages = [];
 
@@ -75,7 +73,7 @@ app.get('/api/messages', (req, res) => {
 });
 
 // API: Submit a new message
-app.post('/api/messages', (req, res) => {
+app.post('/api/messages', async (req, res) => {
   const { name, email, subject, message } = req.body;
 
   // Validation
@@ -94,56 +92,41 @@ app.post('/api/messages', (req, res) => {
   };
 
   messages.push(newMessage);
-  if (writeMessages(messages)) {
-    // ----------------------------------------------------
-    // Nodemailer Email Forwarding Integration
-    // ----------------------------------------------------
-    const isEmailConfigured = !!transporter;
+  const saved = writeMessages(messages);
 
-    if (isEmailConfigured) {
-      const receiverEmail = process.env.RECEIVER_EMAIL || '4444akhiladevi.com@gmail.com';
-      const mailOptions = {
-        from: `"${name} (Portfolio)" <${process.env.SMTP_USER}>`,
-        to: receiverEmail,
-        replyTo: email,
-        subject: `New Message: ${subject || 'No Subject'}`,
-        text: `You have received a new message from your portfolio contact form.\n\n` +
-              `-----------------------------------------------\n` +
-              `Sender Details:\n` +
-              `-----------------------------------------------\n` +
-              `Name:    ${name}\n` +
-              `Email:   ${email}\n` +
-              `Subject: ${subject || 'No Subject'}\n\n` +
-              `-----------------------------------------------\n` +
-              `Message Body:\n` +
-              `-----------------------------------------------\n` +
-              `${message}\n\n` +
-              `-----------------------------------------------\n` +
-              `Note: This message is stored locally in database. ID: ${newMessage.id}`
-      };
-
-      // Send email asynchronously so user doesn't wait for SMTP handshakes
-      transporter.sendMail(mailOptions, (mailErr, info) => {
-        if (mailErr) {
-          console.error('Nodemailer Error: Failed to send email forwarding.', mailErr.message);
-        } else {
-          console.log(`Email Forwarding Success: Message sent to ${receiverEmail}. Response: ${info.response}`);
-        }
-      });
-    } else {
-      console.log('Nodemailer Info: Email forwarding skipped. Add SMTP credentials in .env to enable.');
-    }
-
-    res.status(201).json({
-      success: true,
-      message: isEmailConfigured
-        ? 'Message saved successfully!'
-        : 'Message saved successfully, but email forwarding is disabled until SMTP credentials are configured.',
-      data: newMessage
-    });
-  } else {
-    res.status(500).json({ error: 'Failed to save message on the server.' });
+  if (!saved) {
+    return res.status(500).json({ error: 'Failed to save message on the server.' });
   }
+
+  let emailStatus = 'Message saved successfully.';
+
+  if (resend) {
+    try {
+      await resend.emails.send({
+        from: process.env.RESEND_FROM || 'onboarding@resend.dev',
+        to: process.env.RECEIVER_EMAIL || '4444akhiladevi.com@gmail.com',
+        subject: `Portfolio contact form: ${subject || 'No Subject'}`,
+        html: `
+          <p><strong>New message from your portfolio contact form</strong></p>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject || 'No Subject'}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+        `,
+      });
+      emailStatus = 'Message saved successfully and email notification sent.';
+    } catch (error) {
+      console.error('Resend email error:', error);
+      emailStatus = 'Message saved successfully, but email notification could not be sent.';
+    }
+  }
+
+  res.status(201).json({
+    success: true,
+    message: emailStatus,
+    data: newMessage
+  });
 });
 
 // API: Delete a message by ID

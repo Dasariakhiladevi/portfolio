@@ -138,9 +138,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // ADMIN MESSAGES MODAL & DASHBOARD
   // ==========================================
   const viewMessagesBtn = document.getElementById('viewMessagesBtn');
+  const messageCountEl = document.getElementById('messageCount');
   const messagesModal = document.getElementById('messagesModal');
   const closeModalBtn = document.getElementById('closeModalBtn');
   const messagesList = document.getElementById('messagesList');
+
+  const setMessageCount = (label) => {
+    if (!messageCountEl) return;
+    messageCountEl.textContent = label;
+    messageCountEl.style.color = label.includes('offline') ? '#f97316' : '';
+  };
+
+  const fetchMessageCount = async () => {
+    if (!messageCountEl) return;
+    try {
+      const response = await fetch('/api/messages');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const messages = await response.json();
+      setMessageCount(`(${messages.length})`);
+    } catch (error) {
+      console.error('Message count fetch error:', error);
+      setMessageCount('(offline)');
+    }
+  };
+
+  fetchMessageCount();
 
   if (viewMessagesBtn && messagesModal && closeModalBtn) {
     viewMessagesBtn.addEventListener('click', () => {
@@ -174,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderMessages(messages);
     } catch (error) {
       console.error('Fetch messages error:', error);
+      setMessageCount('(offline)');
       messagesList.innerHTML = `
         <div class="empty-state">
           <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i>
