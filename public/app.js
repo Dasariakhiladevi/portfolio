@@ -137,11 +137,77 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // ADMIN MESSAGES MODAL & DASHBOARD
   // ==========================================
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
   const viewMessagesBtn = document.getElementById('viewMessagesBtn');
   const messageCountEl = document.getElementById('messageCount');
   const messagesModal = document.getElementById('messagesModal');
   const closeModalBtn = document.getElementById('closeModalBtn');
   const messagesList = document.getElementById('messagesList');
+  const adminModal = document.getElementById('adminModal');
+  const closeAdminModalBtn = document.getElementById('closeAdminModalBtn');
+  const adminLoginForm = document.getElementById('adminLoginForm');
+  const adminUsernameInput = document.getElementById('adminUsernameInput');
+  const adminPasswordInput = document.getElementById('adminPasswordInput');
+  const adminLoginError = document.getElementById('adminLoginError');
+
+  let adminAuthenticated = false;
+
+  const getStoredAdminUsername = () => sessionStorage.getItem('adminUsername');
+  const getStoredAdminPassword = () => sessionStorage.getItem('adminPassword');
+
+  const setAdminCredentials = (username, password) => {
+    sessionStorage.setItem('adminUsername', username);
+    sessionStorage.setItem('adminPassword', password);
+  };
+
+  const clearAdminCredentials = () => {
+    sessionStorage.removeItem('adminUsername');
+    sessionStorage.removeItem('adminPassword');
+  };
+
+  const setAdminState = (authenticated) => {
+    adminAuthenticated = authenticated;
+    if (viewMessagesBtn) {
+      viewMessagesBtn.style.display = authenticated ? 'inline-flex' : 'none';
+    }
+    if (adminLoginBtn) {
+      adminLoginBtn.textContent = authenticated ? 'Admin Logout' : 'Admin Login';
+    }
+    if (!authenticated && messageCountEl) {
+      messageCountEl.textContent = '';
+    }
+  };
+
+  const openAdminModal = () => {
+    if (!adminModal) return;
+    adminModal.classList.add('active');
+    if (adminUsernameInput) {
+      adminUsernameInput.value = '';
+      adminUsernameInput.focus();
+    }
+    if (adminPasswordInput) {
+      adminPasswordInput.value = '';
+    }
+    if (adminLoginError) {
+      adminLoginError.textContent = '';
+      adminLoginError.classList.remove('active');
+    }
+  };
+
+  const closeAdminModal = () => {
+    if (!adminModal) return;
+    adminModal.classList.remove('active');
+    if (adminLoginError) {
+      adminLoginError.textContent = '';
+      adminLoginError.classList.remove('active');
+    }
+  };
+
+  const showAdminLoginError = (message) => {
+    if (!adminLoginError) return;
+    adminLoginError.textContent = message;
+    adminLoginError.classList.add('active');
+  };
 
   const setMessageCount = (label) => {
     if (!messageCountEl) return;
@@ -149,10 +215,96 @@ document.addEventListener('DOMContentLoaded', () => {
     messageCountEl.style.color = label.includes('offline') ? '#f97316' : '';
   };
 
+  const getAdminHeaders = () => {
+    const username = getStoredAdminUsername();
+    const password = getStoredAdminPassword();
+    return username && password ? {
+      'x-admin-username': username,
+      'x-admin-password': password
+    } : {};
+  };
+
+  const verifyAdmin = async ({ username, password } = {}) => {
+    if (!username || !password) return false;
+    try {
+      const response = await fetch('/api/admin/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Admin validation error:', error);
+      return false;
+    }
+  };
+
+  const confirmAdmin = async () => {
+    const username = getStoredAdminUsername();
+    const password = getStoredAdminPassword();
+    if (!username || !password) return false;
+
+    const valid = await verifyAdmin({ username, password });
+    if (!valid) {
+      clearAdminCredentials();
+    }
+
+    return valid;
+  };
+
+  const handleAdminLogin = async () => {
+    if (adminAuthenticated) {
+      clearAdminCredentials();
+      setAdminState(false);
+      closeAdminModal();
+      if (messagesModal) {
+        messagesModal.classList.remove('active');
+      }
+      return;
+    }
+
+    openAdminModal();
+  };
+
+  if (adminLoginForm) {
+    adminLoginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!adminUsernameInput || !adminPasswordInput) return;
+
+      const username = adminUsernameInput.value.trim();
+      const password = adminPasswordInput.value.trim();
+      if (!username || !password) {
+        showAdminLoginError('Both username and password are required.');
+        return;
+      }
+
+      const valid = await verifyAdmin({ username, password });
+      if (valid) {
+        setAdminCredentials(username, password);
+        setAdminState(true);
+        closeAdminModal();
+        fetchMessageCount();
+      } else {
+        showAdminLoginError('Invalid admin username or password.');
+      }
+    });
+  }
+
+  confirmAdmin().then((authenticated) => {
+    setAdminState(authenticated);
+    if (authenticated) {
+      fetchMessageCount();
+    }
+  });
+
   const fetchMessageCount = async () => {
     if (!messageCountEl) return;
     try {
-      const response = await fetch('/api/messages');
+      const response = await fetch('/api/messages', {
+        headers: getAdminHeaders(),
+      });
       if (!response.ok) throw new Error('Failed to fetch');
       const messages = await response.json();
       setMessageCount(`(${messages.length})`);
@@ -162,10 +314,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  fetchMessageCount();
+  if (adminLoginBtn) {
+    adminLoginBtn.addEventListener('click', handleAdminLogin);
+  }
+
+  if (closeAdminModalBtn) {
+    closeAdminModalBtn.addEventListener('click', closeAdminModal);
+  }
+
+  if (adminModal) {
+    adminModal.addEventListener('click', (e) => {
+      if (e.target === adminModal) {
+        closeAdminModal();
+      }
+    });
+  }
 
   if (viewMessagesBtn && messagesModal && closeModalBtn) {
     viewMessagesBtn.addEventListener('click', () => {
+      if (!adminAuthenticated) {
+        openAdminModal();
+        return;
+      }
       messagesModal.classList.add('active');
       fetchMessages();
     });
@@ -189,7 +359,9 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       messagesList.innerHTML = '<div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i><p>Loading messages...</p></div>';
 
-      const response = await fetch('/api/messages');
+      const response = await fetch('/api/messages', {
+        headers: getAdminHeaders(),
+      });
       if (!response.ok) throw new Error('Failed to fetch');
 
       const messages = await response.json();
@@ -259,7 +431,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const response = await fetch(`/api/messages/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: getAdminHeaders()
       });
 
       if (response.ok) {

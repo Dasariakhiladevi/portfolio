@@ -35,10 +35,13 @@
         <a href="#contact" class="nav-link">Contact</a>
       </nav>
       <div class="nav-actions">
-        <button id="viewMessagesBtn" class="btn btn-secondary btn-sm">
-          <i class="fa-solid fa-envelope-open-text"></i> Messages <span id="messageCount" class="message-count">(0)</span>
+        <button type="button" id="adminLoginBtn" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-user-shield"></i> Admin Login
         </button>
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+        <button type="button" id="viewMessagesBtn" class="btn btn-secondary btn-sm hidden" style="display:none;">
+          <i class="fa-solid fa-envelope-open-text"></i> Messages <span id="messageCount" class="message-count"></span>
+        </button>
+        <button type="button" class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
           <i class="fa-solid fa-bars"></i>
         </button>
       </div>
@@ -379,13 +382,38 @@
         <button class="modal-close" id="closeModalBtn">&times;</button>
       </div>
       <div class="modal-body">
-        <p class="modal-intro">This dashboard directly queries <code>/api/messages</code> on your running Node.js server. Use this to verify the form submissions.</p>
+        <p class="modal-intro">This dashboard queries the protected <code>/api/messages</code> endpoint on your backend. Use it after admin sign-in to verify contact form submissions.</p>
         <div id="messagesList" class="messages-list">
           <div class="empty-state">
             <i class="fa-solid fa-folder-open"></i>
             <p>No messages received yet. Submit a message through the contact form to see it display here!</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-user-shield"></i> Admin Access</h2>
+        <button class="modal-close" id="closeAdminModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-intro">Enter the admin access code to view and manage contact form messages.</p>
+        <form id="adminLoginForm" class="admin-login-form">
+          <div class="form-group">
+            <label for="adminUsernameInput">Admin Username</label>
+            <input type="text" id="adminUsernameInput" name="adminUsernameInput" placeholder="admin123" required>
+          </div>
+          <div class="form-group">
+            <label for="adminPasswordInput">Admin Password</label>
+            <input type="password" id="adminPasswordInput" name="adminPasswordInput" placeholder="admin1234" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+          <p id="adminLoginError" class="form-feedback"></p>
+        </form>
       </div>
     </div>
   </div>

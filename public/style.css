@@ -1123,6 +1123,48 @@ a {
   border-left: 3px solid var(--primary);
 }
 
+.admin-login-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.admin-login-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-login-form input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.admin-login-form input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: rgba(14, 165, 233, 0.08);
+}
+
+#adminLoginError {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  color: #f8d7da;
+  background-color: rgba(248, 215, 218, 0.14);
+  border: 1px solid rgba(248, 215, 218, 0.35);
+  display: none;
+}
+
+#adminLoginError.active {
+  display: block;
+}
+
 .messages-list {
   display: flex;
   flex-direction: column;

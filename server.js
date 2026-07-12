@@ -8,7 +8,17 @@ const { Resend } = require('resend');
 const app = express();
 const DEFAULT_PORT = Number(process.env.PORT) || 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'messages.json');
+const ADMIN_SECRET = process.env.ADMIN_SECRET || 'adminsecret';
+const ADMIN_USER = process.env.ADMIN_USER || 'admin123';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'admin1234';
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+const isAdminRequest = (req) => {
+  return (
+    (req.headers['x-admin-username'] === ADMIN_USER && req.headers['x-admin-password'] === ADMIN_PASS) ||
+    req.headers['x-admin-secret'] === ADMIN_SECRET
+  );
+};
 
 // Middleware
 app.use(express.json());
@@ -66,8 +76,27 @@ const writeMessages = (messages) => {
   }
 };
 
+// API: Validate admin credentials
+app.post('/api/admin/validate', (req, res) => {
+  const { secret, username, password } = req.body;
+
+  if (secret === ADMIN_SECRET) {
+    return res.json({ success: true });
+  }
+
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    return res.json({ success: true });
+  }
+
+  return res.status(403).json({ error: 'Invalid admin credentials.' });
+});
+
 // API: Get all messages
 app.get('/api/messages', (req, res) => {
+  if (!isAdminRequest(req)) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
   const messages = readMessages();
   res.json(messages);
 });
@@ -131,6 +160,10 @@ app.post('/api/messages', async (req, res) => {
 
 // API: Delete a message by ID
 app.delete('/api/messages/:id', (req, res) => {
+  if (!isAdminRequest(req)) {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
   const { id } = req.params;
   const messages = readMessages();
   const filtered = messages.filter(msg => msg.id !== id);
